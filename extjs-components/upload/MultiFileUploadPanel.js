@@ -45,7 +45,6 @@
                 { name: 'size', type: 'int' },
                 { name: 'type', type: 'string' },
                 { name: 'status', type: 'string', defaultValue: 'pending' },
-                { name: 'progress', type: 'int', defaultValue: 0 },
                 { name: 'fileObject', type: 'auto' },
                 { name: 'errorMessage', type: 'string' }
             ]
@@ -148,25 +147,13 @@
                 {
                     text: 'Status',
                     dataIndex: 'status',
-                    width: 100,
-                    renderer: function(v, meta) {
-                        meta.tdCls = 'file-status-' + v;
-                        return Ext.String.capitalize(v);
-                    }
-                },
-                {
-                    text: 'Progress',
-                    dataIndex: 'progress',
                     width: 150,
                     renderer: function(v, meta, record) {
-                        if (record.get('status') === 'error') {
+                        meta.tdCls = 'file-status-' + v;
+                        if (v === 'error') {
                             return '<span style="color: red;">' + (record.get('errorMessage') || 'Error') + '</span>';
                         }
-                        if (v === 0) return 'Pending';
-                        if (v >= 100) return '<span style="color: green;">Complete</span>';
-                        return '<div style="background: #e0e0e0; height: 16px; border-radius: 3px;">' +
-                            '<div style="background: #4CAF50; height: 100%; width: ' + v + '%;"></div>' +
-                            '</div>';
+                        return Ext.String.capitalize(v);
                     }
                 },
                 {
@@ -301,7 +288,6 @@
                 size: file.size,
                 type: file.type,
                 status: errors.length > 0 ? 'error' : 'pending',
-                progress: 0,
                 fileObject: file,
                 errorMessage: errors.join(', ')
             });
@@ -413,29 +399,6 @@
             if (this.fileButton.fileInputEl) {
                 this.fileButton.fileInputEl.dom.accept = accept;
             }
-        }
-    },
-    
-    updateRecordProgress: function(recordId, progress, status) {
-        var record = this.fileStore.getById(recordId);
-        if (record) {
-            record.set('progress', progress);
-            if (status) {
-                record.set('status', status);
-            }
-            record.commit();
-        }
-    },
-    
-    markRecordError: function(recordId, errorMessage) {
-        var record = this.fileStore.getById(recordId);
-        if (record) {
-            record.set({
-                status: 'error',
-                errorMessage: errorMessage,
-                progress: 0
-            });
-            record.commit();
         }
     }
 });
