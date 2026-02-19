@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Multi-File Upload Panel - ExtJS Classic</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/extjs/6.2.0/classic/theme-triton/resources/theme-triton-all.css">
+    <link rel="stylesheet" href="upload-panel.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/extjs/6.2.0/ext-all.js"></script>
+    
+    <script src="MultiFileUploadPanel.js"></script>
+    <script src="UploadController.js"></script>
+</head>
+<body>
+    <script>
+        Ext.onReady(function() {
+            Ext.create('Ext.Panel', {
+                title: 'Multi-File Upload Example',
+                width: 800,
+                height: 600,
+                layout: 'fit',
+                renderTo: Ext.getBody(),
+                padding: 20,
+                items: [{
+                    xtype: 'multifileupload',
+                    reference: 'uploadPanel',
+                    accept: 'image/*,.pdf,.doc,.docx,.html,.css,.js',
+                    maxFileSize: 10485760,
+                    maxFiles: 20,
+                    dropZoneText: 'Drag and drop files here',
+                    buttonText: 'Browse Files',
+                    removeButtonText: 'Clear All'
+                }],
+                bbar: [
+                    '->',
+                    {
+                        text: 'Upload Files',
+                        reference: 'uploadButton',
+                        iconCls: 'x-fa fa-upload',
+                        disabled: true,
+                        handler: 'onUploadClick'
+                    }
+                ],
+                controller: 'fileupload'
+            });
+        });
+    </script>
+</body>
+</html>
