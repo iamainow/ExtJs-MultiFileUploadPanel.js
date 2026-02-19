@@ -41,25 +41,6 @@
     opacity: 1;
 }
 
-.file-status-pending {
-    color: #666;
-}
-
-.file-status-uploading {
-    color: #2196F3;
-    font-weight: bold;
-}
-
-.file-status-complete {
-    color: #4CAF50;
-    font-weight: bold;
-}
-
-.file-status-error {
-    color: #f44336;
-    font-weight: bold;
-}
-
 .x-grid-empty {
     padding: 20px;
     text-align: center;

@@ -14,15 +14,12 @@
     requires: [
         'Ext.grid.Panel',
         'Ext.grid.column.Action',
-        'Ext.grid.plugin.CellEditing',
         'Ext.toolbar.Toolbar',
         'Ext.button.Button',
-        'Ext.ProgressBar',
         'Ext.data.Store',
         'Ext.data.Model',
         'Ext.form.field.File',
-        'Ext.layout.container.VBox',
-        'Ext.layout.container.Fit'
+        'Ext.layout.container.VBox'
     ],
     
     config: {
@@ -40,13 +37,10 @@
         me.fileModel = Ext.define(null, {
             extend: 'Ext.data.Model',
             fields: [
-                { name: 'fileId', type: 'string' },
                 { name: 'name', type: 'string' },
                 { name: 'size', type: 'int' },
                 { name: 'type', type: 'string' },
-                { name: 'status', type: 'string', defaultValue: 'pending' },
-                { name: 'fileObject', type: 'auto' },
-                { name: 'errorMessage', type: 'string' }
+                { name: 'fileObject', type: 'auto' }
             ]
         });
         
@@ -145,18 +139,6 @@
                     }
                 },
                 {
-                    text: 'Status',
-                    dataIndex: 'status',
-                    width: 150,
-                    renderer: function(v, meta, record) {
-                        meta.tdCls = 'file-status-' + v;
-                        if (v === 'error') {
-                            return '<span style="color: red;">' + (record.get('errorMessage') || 'Error') + '</span>';
-                        }
-                        return Ext.String.capitalize(v);
-                    }
-                },
-                {
                     xtype: 'actioncolumn',
                     width: 50,
                     items: [{
@@ -218,38 +200,32 @@
         };
     },
     
-    onDragEnter: function(e) {
-        var me = this;
+    cancelEvent: function(e) {
         e.stopPropagation();
         e.preventDefault();
-        me.dropZone.addCls('dropzone-active');
+    },
+    
+    onDragEnter: function(e) {
+        this.cancelEvent(e);
+        this.dropZone.addCls('dropzone-active');
     },
     
     onDragOver: function(e) {
-        e.stopPropagation();
-        e.preventDefault();
+        this.cancelEvent(e);
     },
     
     onDragLeave: function(e) {
-        var me = this;
-        e.stopPropagation();
-        e.preventDefault();
-        
+        this.cancelEvent(e);
         var relatedTarget = e.browserEvent.relatedTarget;
-        if (!me.dropZone.getEl().contains(relatedTarget)) {
-            me.dropZone.removeCls('dropzone-active');
+        if (!this.dropZone.getEl().contains(relatedTarget)) {
+            this.dropZone.removeCls('dropzone-active');
         }
     },
     
     onDrop: function(e) {
-        var me = this;
-        e.stopPropagation();
-        e.preventDefault();
-        
-        me.dropZone.removeCls('dropzone-active');
-        
-        var files = e.browserEvent.dataTransfer.files;
-        me.handleFileSelect(files);
+        this.cancelEvent(e);
+        this.dropZone.removeCls('dropzone-active');
+        this.handleFileSelect(e.browserEvent.dataTransfer.files);
     },
     
     handleFileSelect: function(files) {
@@ -270,6 +246,10 @@
             var file = files[i],
                 errors = [];
             
+            if (me.fileStore.findExact('name', file.name) !== -1) {
+                errors.push('File already added');
+            }
+            
             if (accept && !me.validateFileType(file, accept)) {
                 errors.push('File type not allowed');
             }
@@ -278,22 +258,19 @@
                 errors.push('File size exceeds ' + me.formatFileSize(maxFileSize));
             }
             
-            if (me.fileStore.findExact('name', file.name) !== -1) {
-                errors.push('File already added');
+            if (errors.length > 0) {
+                me.fireEvent('validationerror', file.name + ': ' + errors.join(', '));
+                continue;
             }
             
             var record = Ext.create(me.fileModel, {
-                fileId: Ext.id(),
                 name: file.name,
                 size: file.size,
                 type: file.type,
-                status: errors.length > 0 ? 'error' : 'pending',
-                fileObject: file,
-                errorMessage: errors.join(', ')
+                fileObject: file
             });
             
             me.fileStore.add(record);
-            
             me.fireEvent('fileadded', record);
         }
         
@@ -365,20 +342,12 @@
     getFiles: function() {
         var files = [];
         this.fileStore.each(function(record) {
-            if (record.get('status') !== 'error') {
-                files.push(record.get('fileObject'));
-            }
+            files.push(record.get('fileObject'));
         });
         return files;
     },
     
     getFileRecords: function() {
-        return this.fileStore.getRange().filter(function(record) {
-            return record.get('status') !== 'error';
-        });
-    },
-    
-    getAllFileRecords: function() {
         return this.fileStore.getRange();
     },
     

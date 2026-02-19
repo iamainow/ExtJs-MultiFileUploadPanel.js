@@ -11,38 +11,20 @@
     extend: 'Ext.app.ViewController',
     alias: 'controller.fileupload',
     
-    init: function() {
-        var me = this,
-            uploadPanel = me.lookupReference('uploadPanel');
-        
-        uploadPanel.on({
-            fileadded: me.onFileAdded,
-            fileremoved: me.onFileRemoved,
-            fileschanged: me.onFilesChanged,
-            filescleared: me.onFilesCleared,
-            validationerror: me.onValidationError,
-            scope: me
-        });
-    },
-    
-    onFileAdded: function(record) {
-        console.log('File added:', record.get('name'));
-    },
-    
-    onFileRemoved: function(record) {
-        console.log('File removed:', record.get('name'));
+    listen: {
+        component: {
+            'multifileupload': {
+                fileschanged: 'onFilesChanged',
+                validationerror: 'onValidationError'
+            }
+        }
     },
     
     onFilesChanged: function(count) {
-        console.log('Files count changed:', count);
         var uploadBtn = this.lookupReference('uploadButton');
         if (uploadBtn) {
             uploadBtn.setDisabled(count === 0);
         }
-    },
-    
-    onFilesCleared: function() {
-        console.log('All files cleared');
     },
     
     onValidationError: function(message) {
