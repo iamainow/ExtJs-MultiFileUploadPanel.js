@@ -1,49 +1,369 @@
+/* ==========================================================================
+   Multi-File Upload Panel - Modern Styles
+   ========================================================================== */
+
+/* ---------- Drop Zone ---------- */
+
 .file-upload-dropzone {
-    border: 2px dashed #ccc;
-    border-radius: 8px;
-    background: #f9f9f9;
-    margin: 10px;
+    border: 2px dashed #b0bec5;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8edf2 100%);
+    margin: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.file-upload-dropzone:hover {
+    border-color: #90a4ae;
+    background: linear-gradient(135deg, #eef2f7 0%, #dce3ea 100%);
 }
 
 .dropzone-content {
     text-align: center;
-    padding: 20px;
+    padding: 16px 20px;
+    z-index: 1;
 }
 
 .dropzone-icon {
-    font-size: 48px;
-    margin-bottom: 10px;
-    opacity: 0.6;
+    font-size: 42px;
+    margin-bottom: 8px;
+    color: #5c6bc0;
+    transition: all 0.3s ease;
+}
+
+.dropzone-icon .fa {
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.file-upload-dropzone:hover .dropzone-icon .fa {
+    transform: translateY(-3px);
 }
 
 .dropzone-text {
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 5px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #37474f;
+    margin-bottom: 4px;
+    letter-spacing: 0.3px;
 }
 
 .dropzone-hint {
     font-size: 12px;
-    color: #666;
+    color: #90a4ae;
+    margin-bottom: 10px;
 }
 
+/* Accepted format tags in drop zone */
+.dropzone-formats {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.format-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.85);
+    color: #546e7a;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid #cfd8dc;
+    transition: all 0.2s ease;
+}
+
+.format-tag .fa {
+    font-size: 11px;
+}
+
+.format-tag:nth-child(1) .fa { color: #43A047; }
+.format-tag:nth-child(2) .fa { color: #E53935; }
+.format-tag:nth-child(3) .fa { color: #1565C0; }
+.format-tag:nth-child(4) .fa { color: #F9A825; }
+
+/* Drop zone active state (dragging over) */
 .dropzone-active {
-    border-color: #4CAF50;
-    background: #e8f5e9;
+    border-color: #5c6bc0;
+    border-style: solid;
+    background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
+    box-shadow: inset 0 0 0 3px rgba(92, 107, 192, 0.15);
 }
 
 .dropzone-active .dropzone-icon {
-    opacity: 1;
+    color: #3949ab;
+    transform: scale(1.1);
+}
+
+.dropzone-active .dropzone-text {
+    color: #283593;
+}
+
+
+/* ---------- File Grid ---------- */
+
+.file-upload-grid .x-grid-header-ct {
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.file-upload-grid .x-column-header-text {
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #546e7a;
+}
+
+/* Row styling */
+.file-grid-row {
+    transition: background-color 0.15s ease;
+}
+
+.file-grid-row .x-grid-cell {
+    border-bottom: 1px solid #f0f0f0;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.file-upload-grid .x-grid-item-over .x-grid-cell {
+    background-color: #e8eaf6 !important;
+}
+
+.file-upload-grid .x-grid-item-selected .x-grid-cell {
+    background-color: #c5cae9 !important;
+}
+
+/* File name cell with icon */
+.file-name-cell {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 0;
+}
+
+.file-type-icon {
+    font-size: 18px;
+    width: 22px;
+    text-align: center;
+    flex-shrink: 0;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+}
+
+.file-name-text {
+    color: #37474f;
+    font-weight: 500;
+    font-size: 13px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* File size cell */
+.file-size-cell {
+    color: #78909c;
+    font-size: 12px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Empty grid message */
+.empty-grid-message {
+    padding: 30px 20px;
+    text-align: center;
+    color: #b0bec5;
+    font-size: 14px;
+}
+
+.empty-grid-message .fa {
+    font-size: 36px;
+    margin-bottom: 8px;
+    display: block;
+    color: #cfd8dc;
 }
 
 .x-grid-empty {
-    padding: 20px;
-    text-align: center;
+    padding: 0;
     color: #999;
-    font-style: italic;
+    font-style: normal;
+}
+
+
+/* ---------- File Type Badges ---------- */
+
+.file-type-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    line-height: 18px;
+}
+
+.badge-image {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+}
+
+.badge-pdf {
+    background: #ffebee;
+    color: #c62828;
+    border: 1px solid #ffcdd2;
+}
+
+.badge-doc {
+    background: #e3f2fd;
+    color: #1565c0;
+    border: 1px solid #bbdefb;
+}
+
+.badge-spreadsheet {
+    background: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #c8e6c9;
+}
+
+.badge-presentation {
+    background: #fbe9e7;
+    color: #d84315;
+    border: 1px solid #ffccbc;
+}
+
+.badge-code {
+    background: #fff8e1;
+    color: #f57f17;
+    border: 1px solid #ffecb3;
+}
+
+.badge-archive {
+    background: #efebe9;
+    color: #5d4037;
+    border: 1px solid #d7ccc8;
+}
+
+.badge-audio {
+    background: #f3e5f5;
+    color: #7b1fa2;
+    border: 1px solid #e1bee7;
+}
+
+.badge-video {
+    background: #fce4ec;
+    color: #c2185b;
+    border: 1px solid #f8bbd0;
+}
+
+.badge-text {
+    background: #eceff1;
+    color: #455a64;
+    border: 1px solid #cfd8dc;
+}
+
+.badge-default {
+    background: #eceff1;
+    color: #607d8b;
+    border: 1px solid #cfd8dc;
+}
+
+
+/* ---------- Toolbar ---------- */
+
+.upload-toolbar {
+    border-top: 1px solid #e0e0e0 !important;
+    background: #fafbfc !important;
+}
+
+/* File count badge */
+.file-count-badge {
+    display: inline-block;
+    padding: 2px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #eceff1;
+    color: #78909c;
+    border: 1px solid #cfd8dc;
+    transition: all 0.3s ease;
+}
+
+.file-count-badge.has-files {
+    background: #e8eaf6;
+    color: #3949ab;
+    border-color: #c5cae9;
+}
+
+/* Remove button */
+.remove-all-btn .x-btn-inner {
+    color: #e53935;
+}
+
+.remove-all-btn .x-btn-icon-el {
+    color: #e53935;
+}
+
+.remove-all-btn:hover .x-btn-inner {
+    color: #c62828;
+}
+
+/* Action column remove button */
+.file-remove-btn {
+    color: #e53935 !important;
+    transition: color 0.2s ease;
+}
+
+.file-remove-btn:hover {
+    color: #b71c1c !important;
+}
+
+
+/* ---------- Overall Panel Polish ---------- */
+
+.x-panel {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.x-panel-header {
+    background: linear-gradient(135deg, #5c6bc0 0%, #3949ab 100%) !important;
+    border: none !important;
+}
+
+.x-panel-header-title .x-title-text {
+    color: #fff !important;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Upload button in the outer panel */
+.x-btn-default-toolbar-small {
+    border-radius: 6px !important;
+    transition: all 0.2s ease;
+}
+
+/* Scrollbar styling for the grid */
+.file-upload-grid .x-grid-view::-webkit-scrollbar {
+    width: 8px;
+}
+
+.file-upload-grid .x-grid-view::-webkit-scrollbar-track {
+    background: #f5f5f5;
+}
+
+.file-upload-grid .x-grid-view::-webkit-scrollbar-thumb {
+    background: #cfd8dc;
+    border-radius: 4px;
+}
+
+.file-upload-grid .x-grid-view::-webkit-scrollbar-thumb:hover {
+    background: #b0bec5;
 }

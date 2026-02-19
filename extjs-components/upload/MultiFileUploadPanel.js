@@ -31,6 +31,93 @@
         removeButtonText: 'Remove All'
     },
     
+    /**
+     * Maps file extensions/MIME types to Font Awesome icons and colors
+     */
+    fileTypeIcons: {
+        // PDF
+        pdf: { icon: 'fa-file-pdf-o', color: '#E53935' },
+        // Images
+        png: { icon: 'fa-file-image-o', color: '#43A047' },
+        jpg: { icon: 'fa-file-image-o', color: '#43A047' },
+        jpeg: { icon: 'fa-file-image-o', color: '#43A047' },
+        gif: { icon: 'fa-file-image-o', color: '#43A047' },
+        svg: { icon: 'fa-file-image-o', color: '#43A047' },
+        webp: { icon: 'fa-file-image-o', color: '#43A047' },
+        bmp: { icon: 'fa-file-image-o', color: '#43A047' },
+        ico: { icon: 'fa-file-image-o', color: '#43A047' },
+        // Word / Docs
+        doc: { icon: 'fa-file-word-o', color: '#1565C0' },
+        docx: { icon: 'fa-file-word-o', color: '#1565C0' },
+        odt: { icon: 'fa-file-word-o', color: '#1565C0' },
+        rtf: { icon: 'fa-file-word-o', color: '#1565C0' },
+        // Excel / Spreadsheets
+        xls: { icon: 'fa-file-excel-o', color: '#2E7D32' },
+        xlsx: { icon: 'fa-file-excel-o', color: '#2E7D32' },
+        csv: { icon: 'fa-file-excel-o', color: '#2E7D32' },
+        // PowerPoint
+        ppt: { icon: 'fa-file-powerpoint-o', color: '#D84315' },
+        pptx: { icon: 'fa-file-powerpoint-o', color: '#D84315' },
+        // Code
+        js: { icon: 'fa-file-code-o', color: '#F9A825' },
+        ts: { icon: 'fa-file-code-o', color: '#1976D2' },
+        html: { icon: 'fa-file-code-o', color: '#E65100' },
+        css: { icon: 'fa-file-code-o', color: '#1565C0' },
+        json: { icon: 'fa-file-code-o', color: '#6D4C41' },
+        xml: { icon: 'fa-file-code-o', color: '#6D4C41' },
+        py: { icon: 'fa-file-code-o', color: '#1976D2' },
+        java: { icon: 'fa-file-code-o', color: '#E53935' },
+        // Archives
+        zip: { icon: 'fa-file-archive-o', color: '#6D4C41' },
+        rar: { icon: 'fa-file-archive-o', color: '#6D4C41' },
+        '7z': { icon: 'fa-file-archive-o', color: '#6D4C41' },
+        tar: { icon: 'fa-file-archive-o', color: '#6D4C41' },
+        gz: { icon: 'fa-file-archive-o', color: '#6D4C41' },
+        // Text
+        txt: { icon: 'fa-file-text-o', color: '#546E7A' },
+        md: { icon: 'fa-file-text-o', color: '#546E7A' },
+        log: { icon: 'fa-file-text-o', color: '#546E7A' },
+        // Audio
+        mp3: { icon: 'fa-file-audio-o', color: '#8E24AA' },
+        wav: { icon: 'fa-file-audio-o', color: '#8E24AA' },
+        ogg: { icon: 'fa-file-audio-o', color: '#8E24AA' },
+        flac: { icon: 'fa-file-audio-o', color: '#8E24AA' },
+        // Video
+        mp4: { icon: 'fa-file-video-o', color: '#D81B60' },
+        avi: { icon: 'fa-file-video-o', color: '#D81B60' },
+        mkv: { icon: 'fa-file-video-o', color: '#D81B60' },
+        mov: { icon: 'fa-file-video-o', color: '#D81B60' },
+        webm: { icon: 'fa-file-video-o', color: '#D81B60' }
+    },
+    
+    /**
+     * Returns icon info for a given filename
+     */
+    getFileIcon: function(fileName) {
+        var ext = (fileName || '').split('.').pop().toLowerCase();
+        return this.fileTypeIcons[ext] || { icon: 'fa-file-o', color: '#78909C' };
+    },
+    
+    /**
+     * Maps file type to a human-readable category label and color
+     */
+    getFileTypeBadge: function(mimeType, fileName) {
+        var ext = (fileName || '').split('.').pop().toLowerCase();
+        
+        if (mimeType && mimeType.indexOf('image/') === 0) return { label: 'Image', cls: 'badge-image' };
+        if (mimeType === 'application/pdf' || ext === 'pdf') return { label: 'PDF', cls: 'badge-pdf' };
+        if (ext === 'doc' || ext === 'docx' || ext === 'odt' || ext === 'rtf') return { label: 'Document', cls: 'badge-doc' };
+        if (ext === 'xls' || ext === 'xlsx' || ext === 'csv') return { label: 'Spreadsheet', cls: 'badge-spreadsheet' };
+        if (ext === 'ppt' || ext === 'pptx') return { label: 'Presentation', cls: 'badge-presentation' };
+        if (ext === 'js' || ext === 'ts' || ext === 'html' || ext === 'css' || ext === 'json' || ext === 'xml' || ext === 'py' || ext === 'java') return { label: 'Code', cls: 'badge-code' };
+        if (ext === 'zip' || ext === 'rar' || ext === '7z' || ext === 'tar' || ext === 'gz') return { label: 'Archive', cls: 'badge-archive' };
+        if (mimeType && mimeType.indexOf('audio/') === 0) return { label: 'Audio', cls: 'badge-audio' };
+        if (mimeType && mimeType.indexOf('video/') === 0) return { label: 'Video', cls: 'badge-video' };
+        if (mimeType && mimeType.indexOf('text/') === 0) return { label: 'Text', cls: 'badge-text' };
+        
+        return { label: ext.toUpperCase() || 'File', cls: 'badge-default' };
+    },
+    
     initComponent: function() {
         var me = this;
         
@@ -85,9 +172,15 @@
     
     buildDropZoneHtml: function() {
         return '<div class="dropzone-content">' +
-            '<div class="dropzone-icon">&#128194;</div>' +
+            '<div class="dropzone-icon"><i class="fa fa-cloud-upload"></i></div>' +
             '<div class="dropzone-text">' + this.getDropZoneText() + '</div>' +
             '<div class="dropzone-hint">or use the button below</div>' +
+            '<div class="dropzone-formats">' +
+                '<span class="format-tag"><i class="fa fa-file-image-o"></i> Images</span>' +
+                '<span class="format-tag"><i class="fa fa-file-pdf-o"></i> PDF</span>' +
+                '<span class="format-tag"><i class="fa fa-file-word-o"></i> Docs</span>' +
+                '<span class="format-tag"><i class="fa fa-file-code-o"></i> Code</span>' +
+            '</div>' +
             '</div>';
     },
     
@@ -111,38 +204,53 @@
             itemId: 'fileGrid',
             flex: 1,
             store: me.fileStore,
+            cls: 'file-upload-grid',
             hideHeaders: false,
-            emptyText: 'No files selected',
+            emptyText: '<div class="empty-grid-message"><i class="fa fa-inbox"></i><br>No files selected</div>',
+            viewConfig: {
+                stripeRows: true,
+                getRowClass: function() {
+                    return 'file-grid-row';
+                }
+            },
             columns: [
                 {
                     text: 'File Name',
                     dataIndex: 'name',
                     flex: 2,
-                    sortable: true
+                    sortable: true,
+                    renderer: function(v) {
+                        var iconInfo = me.getFileIcon(v);
+                        return '<span class="file-name-cell">' +
+                            '<i class="fa ' + iconInfo.icon + ' file-type-icon" style="color:' + iconInfo.color + '"></i>' +
+                            '<span class="file-name-text">' + Ext.htmlEncode(v) + '</span>' +
+                            '</span>';
+                    }
                 },
                 {
                     text: 'Size',
                     dataIndex: 'size',
-                    width: 100,
+                    width: 110,
                     sortable: true,
                     renderer: function(v) {
-                        return me.formatFileSize(v);
+                        return '<span class="file-size-cell">' + me.formatFileSize(v) + '</span>';
                     }
                 },
                 {
                     text: 'Type',
                     dataIndex: 'type',
-                    width: 120,
+                    width: 140,
                     sortable: true,
-                    renderer: function(v) {
-                        return v || 'Unknown';
+                    renderer: function(v, meta, record) {
+                        var badge = me.getFileTypeBadge(v, record.get('name'));
+                        return '<span class="file-type-badge ' + badge.cls + '">' + badge.label + '</span>';
                     }
                 },
                 {
                     xtype: 'actioncolumn',
                     width: 50,
                     items: [{
-                        iconCls: 'x-fa fa-trash',
+                        iconCls: 'x-fa fa-trash file-remove-btn',
                         tooltip: 'Remove file',
                         handler: function(grid, rowIndex) {
                             var record = grid.getStore().getAt(rowIndex);
@@ -180,21 +288,25 @@
         return {
             xtype: 'toolbar',
             dock: 'bottom',
+            cls: 'upload-toolbar',
             items: [
                 me.fileButton,
                 '->',
                 {
+                    itemId: 'fileCount',
+                    xtype: 'tbtext',
+                    cls: 'file-count-label',
+                    text: '<span class="file-count-badge">0 files selected</span>'
+                },
+                '-',
+                {
                     itemId: 'removeAllBtn',
                     text: me.getRemoveButtonText(),
-                    iconCls: 'x-fa fa-trash',
+                    iconCls: 'x-fa fa-times-circle',
+                    cls: 'remove-all-btn',
                     handler: me.clearFiles,
                     scope: me,
                     disabled: true
-                },
-                {
-                    itemId: 'fileCount',
-                    xtype: 'tbtext',
-                    text: '0 files selected'
                 }
             ]
         };
@@ -332,7 +444,8 @@
             count = me.fileStore.getCount();
         
         if (countText) {
-            countText.setText(count + ' file' + (count !== 1 ? 's' : '') + ' selected');
+            var label = count + ' file' + (count !== 1 ? 's' : '') + ' selected';
+            countText.setText('<span class="file-count-badge' + (count > 0 ? ' has-files' : '') + '">' + label + '</span>');
         }
         if (removeAllBtn) {
             removeAllBtn.setDisabled(count === 0);
